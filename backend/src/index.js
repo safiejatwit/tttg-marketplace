@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors'; 
 import { connectDB } from './config/db.js';
 import authRoutes from './routes/auth.js';
 import itemRoutes from './routes/itemRoutes.js';
@@ -8,7 +9,14 @@ import messageRoutes from './routes/messageRoutes.js';
 dotenv.config();
 await connectDB();
 
-const app = express();
+const app = express(); 
+
+
+app.use(cors({
+   origin: 'http://localhost:5174',    // allow only your React dev server
+   credentials: true                   // if you need cookies, etc.
+ }));
+
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);

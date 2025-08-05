@@ -1,17 +1,23 @@
+// backend/src/middleware/auth.js
 import jwt from 'jsonwebtoken';
 
-const auth = (req, res, next) => {
+export function requireAuth(req, res, next) {
   const authHeader = req.headers.authorization;
-  if (!authHeader) return res.sendStatus(401);
+  if (!authHeader) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
 
-  const token = authHeader.split(' ')[1];
+  const [scheme, token] = authHeader.split(' ');
+  if (scheme !== 'Bearer' || !token) {
+    return res.status(401).json({ message: 'Malformed token' });
+  }
+
   try {
-    const user = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = user;
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = { id: payload.id };
     next();
   } catch (err) {
-    res.sendStatus(403);
+    console.error('JWT verification failed:', err);
+    return res.status(401).json({ message: 'Invalid or expired token' });
   }
-};
-
-export default auth;
+}

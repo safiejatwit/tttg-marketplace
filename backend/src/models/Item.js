@@ -1,14 +1,18 @@
+// backend/src/models/item.js
 import mongoose from 'mongoose';
 
 const itemSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: String,
-  price: Number,
-  imageUrl: String,
-  isActive: { type: Boolean, default: true },
-  expiresAt: Date,
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  sellerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  title:           { type: String, required: true },
+  description:     { type: String, required: true },
+  price:           { type: Number, required: true },
+  condition:       { type: String, enum: ['New','Like-new','Good','Fair'], default: 'Good' },
+  photos:          [String],
+  availabilityEnd: { type: Date, required: true },
 }, { timestamps: true });
 
-const Item = mongoose.model('Item', itemSchema);
-export default Item;
+export default mongoose.model('Item', itemSchema);

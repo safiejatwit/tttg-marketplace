@@ -1,10 +1,15 @@
+// backend/src/routes/messageRoutes.js
+
 import { Router } from 'express';
-import { sendMessage, getConversation } from '../controllers/messageController.js';
-import auth from '../middleware/auth.js';
+import { createMessage, getMessages } from '../controllers/messageController.js';
+import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();
 
-router.post('/', auth, sendMessage);
-router.get('/:userId', auth, getConversation);
+// Create a new message on a thread (requires auth)
+router.post('/', requireAuth, createMessage);
+
+// Fetch all messages in a thread (requires auth)
+router.get('/:threadId', requireAuth, getMessages);
 
 export default router;
