@@ -1,26 +1,25 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import Home     from './pages/Home.jsx';
-import Register from './pages/register.jsx';
-import Login    from './pages/login.jsx';
+import Register from './pages/Register.jsx';
+import Login    from './pages/Login.jsx';
 
 export default function App() {
-  const token = localStorage.getItem('token');
-  console.log('🔃 Routing with token=', token);
-
   return (
-    <BrowserRouter>
-      <nav>
-        <Link to="/">Home</Link> |{' '}
-        <Link to="/register">Register</Link> |{' '}
+    <div>
+      <nav style={{ padding: '1rem', background: '#fff', borderBottom: '1px solid #eee' }}>
+        <Link to="/"     style={{ marginRight: 10 }}>Home</Link>
+        <Link to="/register" style={{ marginRight: 10 }}>Register</Link>
         <Link to="/login">Login</Link>
       </nav>
-
-      <Routes>
-        <Route path="/"        element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login"    element={<Login />} />
-      </Routes>
-    </BrowserRouter>
+      
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login"    element={<Login />} />
+        </Routes>
+      </main>
+    </div>
   );
 }

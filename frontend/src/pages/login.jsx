@@ -1,7 +1,9 @@
+// frontend/src/pages/Login.jsx
 import React, { useState } from 'react';
-import api from '../services/api.js';
+import { useAuth }      from '../context/AuthContext.jsx';
 
 export default function Login() {
+  const { login } = useAuth();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
 
@@ -10,22 +12,49 @@ export default function Login() {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setError('');
     try {
-      const res = await api.post('/auth/login', form);
-      localStorage.setItem('token', res.data.token);
-      window.location.href = '/';
+      await login(form.email, form.password);
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div className="form-container">
       <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <input name="email" type="email"     placeholder="Email"    value={form.email}    onChange={handleChange} required />
-      <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-      <button type="submit">Login</button>
-    </form>
+      {error && <div className="error">{error}</div>}
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="you@example.com"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="••••••••"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <button type="submit" className="submit-button">
+          Login
+        </button>
+      </form>
+    </div>
   );
 }
